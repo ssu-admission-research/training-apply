@@ -251,6 +251,64 @@
     if (label !== undefined) btn.textContent = label;
   }
 
+  /* ================= 사이트 꾸미기 (관리자 설정) ================= */
+
+  const PREVIEW = new URLSearchParams(location.search).has('preview');
+  const SITE_CACHE = 'ssu-site-v1';
+  let siteData = null;
+
+  function contactNumber() {
+    return (siteData && siteData.contact && siteData.contact.phone) || S.contact;
+  }
+
+  function paintSite() {
+    if (!window.SITE) return;
+    siteData = window.SITE.apply(siteData || window.SITE.defaults(), { year: S.year, contact: S.contact });
+  }
+
+  /** 지난번 설정을 먼저 그리고, 서버에서 최신 설정을 받아 다시 그립니다. */
+  async function loadSite() {
+    if (!window.SITE) return;
+    try {
+      const cached = localStorage.getItem(SITE_CACHE);
+      if (cached) { siteData = JSON.parse(cached); paintSite(); }
+    } catch (e) { /* 저장소를 못 쓰는 브라우저면 넘어갑니다 */ }
+
+    if (!CFG.API_URL || /여기에_배포_ID/.test(CFG.API_URL)) return;
+    try {
+      const r = await api('getSite');
+      if (r && r.ok && r.site) {
+        siteData = r.site;
+        paintSite();
+        try { localStorage.setItem(SITE_CACHE, JSON.stringify(r.site)); } catch (e) { /* 넘어갑니다 */ }
+      }
+    } catch (e) { /* 꾸미기는 실패해도 신청에는 지장이 없습니다 */ }
+  }
+
+  /** 관리자 화면 안의 미리보기 — 서버에 묻지 않고, 받은 설정으로만 그립니다. */
+  function bootPreview() {
+    S.year = String(new Date().getFullYear());
+    document.documentElement.classList.add('is-preview');
+    paintSite();
+    renderConsentTerms([
+      { label: '수집 항목', value: '성명, 소속학교, 휴대전화번호, 이메일, 직무 유형, 입학사정관 경력' },
+      { label: '이용 목적', value: '연수 신청 접수, 이수 관리, 교육 안내' },
+      { label: '보유 기간', value: '연수 종료 후 5년' }
+    ]);
+    $('#noticeText').textContent = '미리보기 화면입니다. 실제 신청은 접수되지 않습니다.';
+    show('consent');
+    window.addEventListener('message', (e) => {
+      if (e.origin !== location.origin || !e.data || e.data.type !== 'site-preview') return;
+      siteData = e.data.site;
+      paintSite();
+    });
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) e.preventDefault();
+    }, true);
+    if (window.parent !== window) window.parent.postMessage({ type: 'site-preview-ready' }, location.origin);
+  }
+
   /* ================= 시작 ================= */
 
   async function boot() {
@@ -281,10 +339,9 @@
     S.careerBands = r.careerBands || [];
 
     document.title = r.year + '년 입학사정관 연수 신청 | 숭실대학교';
-    $('#pageTitle').textContent = r.year + '년 연수 신청';
+    paintSite();
     $('#noticeText').textContent = r.notice || '';
-    $('#confirmNote').textContent = '신청 후에는 직접 수정할 수 없습니다. 변경이 필요하면 교육 담당자(' + S.contact + ')에게 문의해 주세요.';
-    $$('.js-tel').forEach((a) => { a.textContent = S.contact; a.href = 'tel:' + S.contact.replace(/[^0-9]/g, ''); });
+    $('#confirmNote').textContent = '신청 후에는 직접 수정할 수 없습니다. 변경이 필요하면 교육 담당자(' + contactNumber() + ')에게 문의해 주세요.';
 
     renderConsentTerms(r.consentTerms || []);
 
@@ -1125,7 +1182,7 @@
       lead = '소속이 ' + r.prevUniversity + '에서 ' + r.university + josa(r.university, '으로', '로') +
         ' 바뀌었고, 이전 수강 이력과 연결되었습니다.';
     } else lead = '이전 수강 이력과 연결되었습니다.';
-    $('#doneNote').textContent = [lead, S.doneText, '문의: ' + S.contact].filter(Boolean).join(' ');
+    $('#doneNote').textContent = [lead, S.doneText, '문의: ' + contactNumber()].filter(Boolean).join(' ');
   }
 
   /* ================= 뒤로 ================= */
@@ -1134,5 +1191,10 @@
     if (this.dataset.back === 'course') goCourse(); else show(this.dataset.back);
   }));
 
-  boot();
+  if (PREVIEW) {
+    bootPreview();
+  } else {
+    loadSite();
+    boot();
+  }
 })();

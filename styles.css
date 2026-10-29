@@ -85,23 +85,86 @@ body {
 
 /* ---------- 헤더 ---------- */
 
-.service-header {
-  background: var(--surface);
-  border-bottom: 1px solid #E1E7EB;
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.header-inner {
-  height: 76px;
+/* 맨 위 띠 */
+
+.utility-bar {
+  background: var(--ssu-navy);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  letter-spacing: -0.015em;
+}
+
+.utility-inner {
+  min-height: 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
+}
+
+.utility-links {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.utility-links li + li::before {
+  content: "";
+  display: inline-block;
+  width: 1px; height: 10px;
+  margin: 0 12px;
+  background: rgba(255, 255, 255, 0.28);
+  vertical-align: -1px;
+}
+
+.utility-links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+}
+
+.utility-links a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.utility-links a:focus-visible { outline-color: rgba(255, 255, 255, 0.7); }
+
+.utility-hours {
+  margin: 0 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 헤더 */
+
+.service-header {
+  background: var(--surface);
+  border-bottom: 1px solid #E1E7EB;
+  box-shadow: 0 1px 0 rgba(11, 45, 87, 0.02);
+}
+
+.header-inner {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
 }
 
 .brand-mark {
@@ -109,40 +172,180 @@ body {
   flex-shrink: 0;
 }
 
+.brand-mark svg { width: 36px; height: 36px; }
+
+.brand-logo {
+  display: block;
+  width: auto;
+  max-width: 240px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .brand-text {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
 .brand-text strong {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   color: var(--ssu-navy);
+  white-space: nowrap;
 }
 
 .brand-service {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-secondary);
-  letter-spacing: -0.02em;
-  padding-left: 11px;
+  letter-spacing: -0.03em;
+  padding-left: 12px;
   border-left: 1px solid var(--border-default);
+  white-space: nowrap;
+  line-height: 1.3;
 }
+
+.brand-service.no-divider { padding-left: 0; border-left: 0; }
+
+/* 메뉴 */
+
+.header-nav {
+  margin-left: auto;
+  align-self: stretch;
+  display: flex;
+}
+
+.header-nav ul {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.header-nav li { display: flex; }
+
+.header-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.header-nav-link:hover {
+  color: var(--ssu-primary);
+  border-bottom-color: var(--ssu-primary);
+}
+
+/* 문의 */
 
 .header-contact {
-  margin: 0;
+  margin: 0 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
   font-size: 14px;
   color: var(--text-muted);
-}
-
-.header-contact a {
-  color: var(--ssu-primary);
-  font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
 }
 
-.header-contact a:hover { text-decoration: underline; }
+.header-contact:hover { border-color: var(--ssu-primary); background: var(--surface-tint); }
+
+.header-nav:not([hidden]) + .header-contact { margin-left: 8px; }
+
+.header-contact-icon { display: flex; color: var(--ssu-primary); }
+
+.header-contact-num {
+  color: var(--ssu-primary);
+  font-weight: 700;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* 공지 띠 */
+
+.notice-bar {
+  border-bottom: 1px solid var(--border-default);
+  background: var(--surface-tint);
+  color: var(--text-primary);
+}
+
+.notice-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px 0;
+}
+
+.notice-dot {
+  flex-shrink: 0;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--ssu-primary);
+}
+
+.notice-text {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.notice-link {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ssu-primary);
+  text-underline-offset: 3px;
+}
+
+.notice-bar.tone-warn { background: #FFF8E6; border-bottom-color: #F3DFAE; }
+.notice-bar.tone-warn .notice-dot { background: #B7791F; }
+.notice-bar.tone-warn .notice-link { color: #8A5A10; }
+
+.notice-bar.tone-strong { background: var(--ssu-primary); border-bottom-color: var(--ssu-primary); color: #fff; }
+.notice-bar.tone-strong .notice-dot { background: #fff; }
+.notice-bar.tone-strong .notice-link { color: #fff; }
+.notice-bar.tone-strong .notice-link:focus-visible { outline-color: rgba(255, 255, 255, 0.7); }
+
+/* 제목 영역 */
+
+.hero.is-band {
+  background: var(--ssu-navy);
+  background-image:
+    radial-gradient(120% 140% at 100% 0%, rgba(96, 193, 195, 0.22) 0%, rgba(96, 193, 195, 0) 55%),
+    linear-gradient(135deg, var(--ssu-navy) 0%, var(--ssu-primary-dark) 100%);
+  color: #fff;
+}
+
+.hero.is-band .page-title { padding: 44px 0 40px; }
+.hero.is-band .service-name { color: #9EDBDC; }
+.hero.is-band .page-title h1 { color: #fff; }
+.hero.is-band .page-desc { color: rgba(255, 255, 255, 0.82); }
+.hero.is-band + .page-body { padding-top: 28px; }
 
 /* ---------- 페이지 제목 ---------- */
 
@@ -1100,12 +1303,22 @@ body {
   flex-wrap: wrap;
 }
 
+.footer-main { display: flex; flex-direction: column; gap: 4px; }
+
 .footer-org {
   margin: 0;
   font-size: 15px;
   font-weight: 700;
   color: var(--text-secondary);
   letter-spacing: -0.025em;
+}
+
+.footer-address,
+.footer-copy {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  letter-spacing: -0.015em;
 }
 
 .footer-contact {
@@ -1162,18 +1375,62 @@ body {
 @media (max-width: 767px) {
   .page-container { width: calc(100% - 32px); }
 
+  .utility-hours { display: none; }
+  .utility-inner { min-height: 32px; font-size: 12.5px; }
+
   .header-inner {
-    height: auto;
-    padding: 14px 0 12px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+    min-height: 0;
+    padding: 12px 0;
+    flex-wrap: wrap;
+    gap: 10px 12px;
   }
 
+  .brand { gap: 9px; }
+  .brand-mark svg { width: 30px; height: 30px; }
+  .brand-logo { max-height: 34px; max-width: 170px; }
   .brand-text { gap: 8px; }
   .brand-text strong { font-size: 17px; }
-  .brand-service { font-size: 14px; padding-left: 9px; }
-  .header-contact { font-size: 13.5px; }
+  .brand-service { font-size: 14px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; }
+  .brand-text { overflow: hidden; }
+
+  /* 휴대폰: 전화 아이콘 동그라미만 (누르면 바로 전화) */
+  .header-contact {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+  .header-contact-label,
+  .header-contact-num {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .header-contact-icon svg { width: 18px; height: 18px; }
+
+  /* 메뉴는 아래 줄에서 가로로 밀어 봅니다 */
+  .header-nav {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0 -16px -12px;
+    padding: 0 8px;
+    border-top: 1px solid var(--border-light);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .header-nav::-webkit-scrollbar { display: none; }
+  .header-nav:not([hidden]) + .header-contact { margin-left: auto; }
+  .header-nav-link { padding: 12px 10px 10px; font-size: 14.5px; }
+
+  .notice-inner { flex-wrap: wrap; gap: 4px 10px; }
+  .notice-text { flex: 1; min-width: 0; font-size: 14px; }
+  .notice-link { margin-left: 18px; }
+
+  .hero.is-band .page-title { padding: 28px 0 26px; }
+  .hero.is-band + .page-body { padding-top: 20px; }
 
   .page-title { padding: 26px 0 20px; }
   .page-title h1 { font-size: 29px; }

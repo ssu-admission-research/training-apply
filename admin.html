@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>사이트 관리 | 입학사정관 연수 신청</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="config.js" defer></script>
+  <script src="site.js" defer></script>
+  <script src="admin.js" defer></script>
+</head>
+<body>
+
+<!-- ============ 로그인 ============ -->
+<div class="login" id="viewLogin" hidden>
+  <form class="login-card" id="loginForm" novalidate>
+    <p class="login-kicker">입학사정관 연수 신청</p>
+    <h1>사이트 관리</h1>
+    <p class="login-desc">신청 화면의 로고, 메뉴, 공지, 제목을 바꾸는 곳입니다.</p>
+    <label for="loginPassword">관리자 비밀번호</label>
+    <input type="password" id="loginPassword" autocomplete="current-password" required>
+    <p class="login-error" id="loginError" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary btn-block" id="btnLogin">로그인</button>
+    <p class="login-foot"><a href="./">신청 화면으로 돌아가기</a></p>
+  </form>
+</div>
+
+<!-- ============ 관리 화면 ============ -->
+<div class="app" id="viewApp" hidden>
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-mark" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none"><path d="M3 5.5h14M3 10h14M3 14.5h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <strong>입학사정관 연수</strong>
+      <span class="topbar-sep" aria-hidden="true"></span>
+      <span>사이트 관리</span>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="topbar-btn only-narrow" id="btnPreviewOpen">미리보기</button>
+      <a class="topbar-btn topbar-open" href="./" target="_blank" rel="noopener">신청 화면 열기</a>
+      <button type="button" class="topbar-btn" id="btnLogout">로그아웃</button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <nav class="sidenav" aria-label="설정 항목">
+      <p class="sidenav-title">기본 정보</p>
+      <a href="#sec-brand" class="is-active">로고 · 이름</a>
+      <a href="#sec-contact">문의처</a>
+      <p class="sidenav-title">상단 꾸미기</p>
+      <a href="#sec-utility">맨 위 띠</a>
+      <a href="#sec-nav">메뉴</a>
+      <a href="#sec-notice">공지 띠</a>
+      <p class="sidenav-title">본문</p>
+      <a href="#sec-hero">제목 영역</a>
+      <a href="#sec-theme">대표 색상</a>
+      <p class="sidenav-title">하단</p>
+      <a href="#sec-footer">하단 정보</a>
+    </nav>
+
+    <main class="editor" id="editor">
+
+      <div class="loading" id="editorLoading" role="status">
+        <span class="spinner" aria-hidden="true"></span> 설정을 불러오고 있습니다.
+      </div>
+
+      <div id="editorBody" hidden>
+
+        <!-- 로고 · 이름 -->
+        <section class="sec" id="sec-brand" aria-labelledby="h-brand">
+          <h2 id="h-brand">로고 · 이름</h2>
+
+          <div class="row">
+            <div class="row-label">학교 로고</div>
+            <div class="row-control">
+              <div class="logo-box">
+                <div class="logo-stage" id="logoStage">
+                  <img id="logoPreview" alt="" hidden>
+                  <span class="logo-empty" id="logoEmpty">등록된 로고가 없습니다<br><small>지금은 기본 표시(S 모양)를 씁니다</small></span>
+                </div>
+                <div class="logo-actions">
+                  <label class="btn btn-ghost btn-sm" for="logoFile">이미지 등록</label>
+                  <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" class="sr-only">
+                  <button type="button" class="btn btn-ghost btn-sm" id="btnLogoRemove" hidden>삭제</button>
+                </div>
+              </div>
+              <p class="row-error" id="logoError" hidden></p>
+            </div>
+            <p class="row-help">학교 홍보팀의 공식 로고 파일을 올려 주세요. SVG 또는 가로형 PNG(배경 투명)가 가장 선명합니다. 큰 이미지는 자동으로 줄여 저장합니다.</p>
+          </div>
+
+          <div class="row" id="rowLogoHeight">
+            <div class="row-label"><label for="logoHeight">로고 높이</label></div>
+            <div class="row-control">
+              <div class="range">
+                <input type="range" id="logoHeight" data-path="brand.logoHeight" min="24" max="64" step="2">
+                <output id="logoHeightOut">40px</output>
+              </div>
+            </div>
+            <p class="row-help">헤더 안에서 보이는 높이입니다. 36~44px을 권장합니다.</p>
+          </div>
+
+          <div class="row" id="rowShowOrg">
+            <div class="row-label">학교 이름 글자</div>
+            <div class="row-control">
+              <label class="check"><input type="checkbox" data-path="brand.showOrgName"> 로고 옆에 학교 이름을 글자로 표시</label>
+            </div>
+            <p class="row-help">로고 안에 '숭실대학교' 글자가 이미 있으면 끄세요. 이름이 두 번 보이지 않습니다.</p>
+          </div>
+
+          <div class="row">
+            <div class="row-label"><label for="f-orgName">학교 이름</label></div>
+            <div class="row-control"><input type="text" id="f-orgName" data-path="brand.orgName" maxlength="30"></div>
+            <p class="row-help">30자 이내. 로고를 읽지 못하는 화면 낭독기에도 이 이름을 알려 줍니다.</p>
+          </div>
+
+          <div class="row">
+            <div class="row-label"><label for="f-serviceName">서비스 이름</label></div>
+            <div class="row-control"><input type="text" id="f-serviceName" data-path="brand.serviceName" maxlength="30"></div>
+            <p class="row-help">학교 이름 오른쪽에 구분선과 함께 표시됩니다. 30자 이내.</p>
+          </div>
+        </section>
+
+        <!-- 문의처 -->
+        <section class="sec" id="sec-contact" aria-labelledby="h-contact">
+          <h2 id="h-contact">문의처</h2>
+          <div class="row">
+            <div class="row-label"><label for="f-contactLabel">문의 이름</label></div>
+            <div class="row-control"><input type="text" id="f-contactLabel" data-path="contact.label" maxlength="12" class="w-md"></div>
+            <p class="row-help">예: 교육 문의, 연수 문의. 12자 이내.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-contactPhone">전화번호</label></div>
+            <div class="row-control"><input type="tel" id="f-contactPhone" data-path="contact.phone" maxlength="20" class="w-md" placeholder="비워 두면 서버 설정 번호 사용"></div>
+            <p class="row-help">헤더와 하단에 표시되고, 휴대폰에서 누르면 바로 전화가 걸립니다.</p>
+          </div>
+        </section>
+
+        <!-- 맨 위 띠 -->
+        <section class="sec" id="sec-utility" aria-labelledby="h-utility">
+          <h2 id="h-utility">맨 위 띠</h2>
+          <div class="row">
+            <div class="row-label">표시</div>
+            <div class="row-control">
+              <label class="check"><input type="checkbox" data-path="utility.show"> 헤더 위에 남색 띠 표시</label>
+            </div>
+            <p class="row-help">학교 홈페이지 바로가기 같은 작은 링크와 운영 시간을 넣는 자리입니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">링크</div>
+            <div class="row-control">
+              <div class="links" data-links="utility.links" data-max="4"></div>
+            </div>
+            <p class="row-help">최대 4개. 이름은 20자 이내, 주소는 https:// 로 시작해야 합니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-hours">운영 시간</label></div>
+            <div class="row-control"><input type="text" id="f-hours" data-path="utility.hours" maxlength="40" class="w-md"></div>
+            <p class="row-help">띠 오른쪽에 '운영 시간 …'으로 표시됩니다. 비우면 숨깁니다.</p>
+          </div>
+        </section>
+
+        <!-- 메뉴 -->
+        <section class="sec" id="sec-nav" aria-labelledby="h-nav">
+          <h2 id="h-nav">메뉴</h2>
+          <div class="row">
+            <div class="row-label">헤더 메뉴</div>
+            <div class="row-control">
+              <div class="links" data-links="nav.links" data-max="6"></div>
+            </div>
+            <p class="row-help">헤더 가운데에 표시됩니다. 최대 6개. 예: 연수 안내(공지 글 주소), 자주 묻는 질문, 이수증 발급.</p>
+          </div>
+        </section>
+
+        <!-- 공지 띠 -->
+        <section class="sec" id="sec-notice" aria-labelledby="h-notice">
+          <h2 id="h-notice">공지 띠</h2>
+          <div class="row">
+            <div class="row-label">표시</div>
+            <div class="row-control">
+              <label class="check"><input type="checkbox" data-path="notice.show"> 헤더 아래에 공지 띠 표시</label>
+            </div>
+            <p class="row-help">마감 임박, 일정 변경처럼 모두 꼭 봐야 하는 한 줄 안내에 쓰세요.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-noticeText">공지 문구</label></div>
+            <div class="row-control">
+              <input type="text" id="f-noticeText" data-path="notice.text" maxlength="120" placeholder="예: 2026년 연수 신청은 11월 14일(금) 18시에 마감합니다.">
+            </div>
+            <p class="row-help">120자 이내.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">강조 정도</div>
+            <div class="row-control">
+              <div class="seg" role="radiogroup" aria-label="강조 정도">
+                <label><input type="radio" name="noticeTone" value="info" data-path="notice.tone"><span>안내</span></label>
+                <label><input type="radio" name="noticeTone" value="warn" data-path="notice.tone"><span>주의</span></label>
+                <label><input type="radio" name="noticeTone" value="strong" data-path="notice.tone"><span>강조</span></label>
+              </div>
+            </div>
+            <p class="row-help">안내는 옅은 파랑, 주의는 노랑, 강조는 대표 색상 바탕입니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">자세히 보기</div>
+            <div class="row-control two">
+              <input type="text" data-path="notice.linkLabel" maxlength="16" placeholder="버튼 이름 (예: 자세히 보기)" aria-label="자세히 보기 버튼 이름">
+              <input type="url" data-path="notice.url" maxlength="300" placeholder="https://" aria-label="자세히 보기 주소">
+            </div>
+            <p class="row-help">둘 다 채우면 공지 오른쪽에 링크가 생깁니다.</p>
+          </div>
+        </section>
+
+        <!-- 제목 영역 -->
+        <section class="sec" id="sec-hero" aria-labelledby="h-hero">
+          <h2 id="h-hero">제목 영역</h2>
+          <div class="row">
+            <div class="row-label">모양</div>
+            <div class="row-control">
+              <div class="seg" role="radiogroup" aria-label="제목 영역 모양">
+                <label><input type="radio" name="heroStyle" value="plain" data-path="hero.style"><span>기본 (밝은 바탕)</span></label>
+                <label><input type="radio" name="heroStyle" value="band" data-path="hero.style"><span>남색 띠</span></label>
+              </div>
+            </div>
+            <p class="row-help">남색 띠는 제목 영역을 화면 너비 가득 진하게 칠해 첫인상을 또렷하게 합니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-eyebrow">작은 제목</label></div>
+            <div class="row-control"><input type="text" id="f-eyebrow" data-path="hero.eyebrow" maxlength="40"></div>
+            <p class="row-help">큰 제목 위의 한 줄. 40자 이내.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-title">큰 제목</label></div>
+            <div class="row-control"><input type="text" id="f-title" data-path="hero.title" maxlength="120"></div>
+            <p class="row-help"><code>{year}</code> 자리에는 서버에 설정된 신청 연도가 들어갑니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-desc">설명</label></div>
+            <div class="row-control"><textarea id="f-desc" data-path="hero.desc" maxlength="160" rows="2"></textarea></div>
+            <p class="row-help">160자 이내.</p>
+          </div>
+        </section>
+
+        <!-- 대표 색상 -->
+        <section class="sec" id="sec-theme" aria-labelledby="h-theme">
+          <h2 id="h-theme">대표 색상</h2>
+          <div class="row">
+            <div class="row-label">색상</div>
+            <div class="row-control">
+              <div class="swatches" id="swatches"></div>
+              <div class="color-custom">
+                <input type="color" id="colorPicker" aria-label="직접 고르기">
+                <input type="text" id="colorHex" maxlength="7" class="w-sm" aria-label="색상 코드" spellcheck="false">
+              </div>
+              <p class="row-warn" id="colorWarn" hidden></p>
+            </div>
+            <p class="row-help">버튼, 선택 표시, 링크 색입니다. 흰 글자가 잘 읽히도록 너무 밝은 색은 피하세요.</p>
+          </div>
+        </section>
+
+        <!-- 하단 정보 -->
+        <section class="sec" id="sec-footer" aria-labelledby="h-footer">
+          <h2 id="h-footer">하단 정보</h2>
+          <div class="row">
+            <div class="row-label"><label for="f-footerOrg">기관명</label></div>
+            <div class="row-control"><input type="text" id="f-footerOrg" data-path="footer.org" maxlength="40"></div>
+            <p class="row-help">40자 이내.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-address">주소</label></div>
+            <div class="row-control"><input type="text" id="f-address" data-path="footer.address" maxlength="80" placeholder="예: 서울특별시 동작구 상도로 369"></div>
+            <p class="row-help">비우면 숨깁니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label"><label for="f-copy">저작권 문구</label></div>
+            <div class="row-control"><input type="text" id="f-copy" data-path="footer.copyright" maxlength="80" placeholder="예: © Soongsil University. All rights reserved."></div>
+            <p class="row-help">비우면 숨깁니다.</p>
+          </div>
+        </section>
+
+        <p class="reset-line"><button type="button" class="btn-text" id="btnDefaults">처음 설정으로 되돌리기</button></p>
+      </div>
+    </main>
+
+    <aside class="preview" id="preview" aria-label="미리보기">
+      <div class="preview-head">
+        <p class="preview-title">미리보기 <span class="preview-note">저장 전 화면</span></p>
+        <div class="seg seg-sm" role="radiogroup" aria-label="화면 크기">
+          <label><input type="radio" name="device" value="pc" checked><span>PC</span></label>
+          <label><input type="radio" name="device" value="mobile"><span>휴대폰</span></label>
+        </div>
+        <button type="button" class="preview-close only-narrow" id="btnPreviewClose" aria-label="미리보기 닫기">닫기</button>
+      </div>
+      <div class="preview-stage" id="previewStage">
+        <div class="preview-frame" id="previewFrame">
+          <iframe id="previewIframe" title="신청 화면 미리보기" src="index.html?preview=1" tabindex="-1"></iframe>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="savebar" id="savebar">
+    <p class="savebar-status" id="saveStatus" role="status">변경 사항 없음</p>
+    <button type="button" class="btn btn-ghost" id="btnRevert" disabled>되돌리기</button>
+    <button type="button" class="btn btn-primary" id="btnSave" disabled>저장</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript><p class="noscript">이 페이지는 자바스크립트가 필요합니다.</p></noscript>
+</body>
+</html>

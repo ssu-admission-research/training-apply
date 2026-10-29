@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="styles.css">
   <script src="config.js" defer></script>
+  <script src="site.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -27,10 +28,22 @@
 
 <a class="skip-link" href="#main">본문으로 건너뛰기</a>
 
+<!-- 아래 내용은 관리자 페이지(admin.html)의 설정으로 바뀝니다. 여기 적힌 값은 설정을 불러오기 전 기본값입니다. -->
+
+<div class="utility-bar" id="utilityBar">
+  <div class="page-container utility-inner">
+    <ul class="utility-links" id="utilityLinks">
+      <li><a href="https://ssu.ac.kr" target="_blank" rel="noopener">숭실대학교 홈페이지<span class="sr-only"> (새 창)</span></a></li>
+    </ul>
+    <p class="utility-hours" id="utilityHours">운영 시간 평일 09:00 – 18:00</p>
+  </div>
+</div>
+
 <header class="service-header">
   <div class="page-container header-inner">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">
+    <a class="brand" id="brandLink" href="./">
+      <img class="brand-logo" id="brandLogo" alt="" hidden>
+      <span class="brand-mark" id="brandMark" aria-hidden="true">
         <svg viewBox="0 0 28 28" width="28" height="28" fill="none">
           <rect x="1" y="1" width="26" height="26" rx="3" fill="#006694"/>
           <path d="M8.5 18.6c1.1.9 2.6 1.4 4.2 1.4 2.6 0 4.1-1.2 4.1-3 0-1.7-1.1-2.5-3.6-3.1-2-.5-2.6-.9-2.6-1.7 0-.8.8-1.4 2.1-1.4 1.2 0 2.3.4 3.2 1.1l1.3-1.9C16.1 8.4 14.6 8 12.9 8c-2.5 0-4 1.3-4 3.1 0 1.8 1.2 2.6 3.7 3.2 1.9.4 2.5.8 2.5 1.6 0 .9-.8 1.4-2.2 1.4-1.4 0-2.7-.5-3.7-1.4l-1.4 1.9z" fill="#fff"/>
@@ -38,21 +51,46 @@
         </svg>
       </span>
       <span class="brand-text">
-        <strong>숭실대학교</strong>
-        <span class="brand-service">입학사정관 연수</span>
+        <strong id="brandOrg">숭실대학교</strong>
+        <span class="brand-service" id="brandService">입학사정관 연수</span>
       </span>
-    </div>
-    <p class="header-contact">교육 문의 <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
+    </a>
+
+    <nav class="header-nav" id="headerNav" aria-label="주요 메뉴" hidden>
+      <ul id="headerNavList"></ul>
+    </nav>
+
+    <a class="header-contact js-tel" href="tel:0282000054">
+      <span class="header-contact-icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="16" height="16" fill="none">
+          <path d="M6.6 2.8l1.6 3.4c.2.4.1.9-.2 1.2L6.7 8.6a10 10 0 0 0 4.7 4.7l1.2-1.3c.3-.3.8-.4 1.2-.2l3.4 1.6c.5.2.7.7.6 1.2l-.5 2.1c-.1.5-.6.9-1.1.9C9.4 17.6 2.4 10.6 2.4 3.8c0-.5.4-1 .9-1.1l2.1-.5c.5-.1 1 .1 1.2.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="header-contact-label" id="contactLabel">교육 문의</span>
+      <span class="header-contact-num js-tel-num">02-820-0054</span>
+    </a>
   </div>
 </header>
 
-<div class="page-container">
-
-  <div class="page-title">
-    <p class="service-name">입학사정관 역량강화 연수</p>
-    <h1 id="pageTitle">연수 신청</h1>
-    <p class="page-desc">신청자 정보와 수강할 연수 과정을 입력해 주세요.</p>
+<div class="notice-bar tone-info" id="noticeBar" role="note" hidden>
+  <div class="page-container notice-inner">
+    <span class="notice-dot" aria-hidden="true"></span>
+    <p class="notice-text" id="noticeBarText"></p>
+    <a class="notice-link" id="noticeBarLink" hidden></a>
   </div>
+</div>
+
+<section class="hero" id="hero">
+  <div class="page-container">
+    <div class="page-title">
+      <p class="service-name" id="heroEyebrow">입학사정관 역량강화 연수</p>
+      <h1 id="pageTitle">연수 신청</h1>
+      <p class="page-desc" id="heroDesc">신청자 정보와 수강할 연수 과정을 입력해 주세요.</p>
+    </div>
+  </div>
+</section>
+
+<div class="page-container page-body">
 
   <nav class="steps" aria-label="신청 단계" hidden>
     <p class="steps-mobile">
@@ -374,8 +412,12 @@
   </main>
 
   <footer class="service-footer">
-    <p class="footer-org">숭실대학교 입학처</p>
-    <p class="footer-contact">교육 문의 <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
+    <div class="footer-main">
+      <p class="footer-org" id="footerOrg">숭실대학교 입학처</p>
+      <p class="footer-address" id="footerAddress" hidden></p>
+      <p class="footer-copy" id="footerCopy" hidden></p>
+    </div>
+    <p class="footer-contact"><span class="js-contact-label">교육 문의</span> <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
   </footer>
 </div>
 
