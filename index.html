@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>입학사정관 연수 신청 | 숭실대학교</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+<!--
+  ─────────────────────────────────────────────
+    입학사정관 연수 신청 시스템
+    숭실대학교 입학처
+
+    기획 · 설계 · 개발   입학사정관 복유진
+    문의                 02-820-0054
+    최초 제작            2026년 7월
+    전면 개편            2026년 10월
+  ─────────────────────────────────────────────
+-->
+
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+<header class="service-header">
+  <div class="page-container header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 28" width="28" height="28" fill="none">
+          <rect x="1" y="1" width="26" height="26" rx="3" fill="#006694"/>
+          <path d="M8.5 18.6c1.1.9 2.6 1.4 4.2 1.4 2.6 0 4.1-1.2 4.1-3 0-1.7-1.1-2.5-3.6-3.1-2-.5-2.6-.9-2.6-1.7 0-.8.8-1.4 2.1-1.4 1.2 0 2.3.4 3.2 1.1l1.3-1.9C16.1 8.4 14.6 8 12.9 8c-2.5 0-4 1.3-4 3.1 0 1.8 1.2 2.6 3.7 3.2 1.9.4 2.5.8 2.5 1.6 0 .9-.8 1.4-2.2 1.4-1.4 0-2.7-.5-3.7-1.4l-1.4 1.9z" fill="#fff"/>
+          <path d="M18.5 8h2.2v6.6c0 1.1.6 1.7 1.5 1.9v2.1c-2.3-.2-3.7-1.5-3.7-3.9V8z" fill="#60C1C3"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>숭실대학교</strong>
+        <span class="brand-service">입학사정관 연수</span>
+      </span>
+    </div>
+    <p class="header-contact">교육 문의 <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
+  </div>
+</header>
+
+<div class="page-container">
+
+  <div class="page-title">
+    <p class="service-name">입학사정관 역량강화 연수</p>
+    <h1 id="pageTitle">연수 신청</h1>
+    <p class="page-desc">신청자 정보와 수강할 연수 과정을 입력해 주세요.</p>
+  </div>
+
+  <nav class="steps" aria-label="신청 단계" hidden>
+    <p class="steps-mobile">
+      <span class="steps-count"><strong id="stepNow">1</strong> / 4</span>
+      <span class="steps-label" id="stepLabel">개인정보 동의</span>
+    </p>
+    <ol class="steps-list">
+      <li><span class="no">01</span><span class="nm">개인정보 동의</span></li>
+      <li><span class="no">02</span><span class="nm">신청자 확인</span></li>
+      <li><span class="no">03</span><span class="nm">연수 정보</span></li>
+      <li><span class="no">04</span><span class="nm">최종 확인</span></li>
+    </ol>
+  </nav>
+
+  <main id="main" class="form-card" tabindex="-1">
+
+    <div class="error-summary" id="errorSummary" hidden tabindex="-1" role="alert">
+      <p class="error-summary-title">입력한 내용을 확인해 주세요</p>
+      <ul id="errorSummaryList"></ul>
+    </div>
+
+    <!-- 불러오는 중 -->
+    <section class="panel is-active" data-panel="loading">
+      <div class="loading" role="status">
+        <span class="spinner" aria-hidden="true"></span>
+        <p>신청 정보를 불러오고 있습니다.</p>
+      </div>
+    </section>
+
+    <!-- 연결 실패 -->
+    <section class="panel" data-panel="fatal">
+      <h2>신청 화면을 열지 못했습니다</h2>
+      <p class="panel-desc" id="fatalMessage">잠시 후 다시 시도해 주세요.</p>
+      <div class="actions">
+        <span class="actions-spacer"></span>
+        <button type="button" class="btn btn-primary" id="btnRetry">다시 시도</button>
+      </div>
+    </section>
+
+    <!-- 접수 마감 -->
+    <section class="panel" data-panel="closed">
+      <h2>지금은 신청 기간이 아닙니다</h2>
+      <p class="panel-desc" id="closedMessage"></p>
+    </section>
+
+    <!-- 01 개인정보 동의 -->
+    <section class="panel" data-panel="consent" aria-labelledby="h-consent">
+      <h2 id="h-consent">개인정보 수집·이용 동의</h2>
+      <p class="panel-desc">연수 신청과 이수 관리를 위해 아래 개인정보를 수집합니다.</p>
+
+      <div class="consent-doc">
+        <p class="consent-doc-title"><span class="tag tag-required">필수</span>개인정보 수집·이용</p>
+        <dl class="consent-terms" id="consentTerms"></dl>
+      </div>
+
+      <fieldset class="field">
+        <legend>개인정보 수집·이용에 동의하십니까?</legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="consent" value="yes">
+            <span class="choice-body"><strong>동의합니다</strong></span></label>
+          <label class="choice"><input type="radio" name="consent" value="no">
+            <span class="choice-body"><strong>동의하지 않습니다</strong></span></label>
+        </div>
+        <p class="field-error" id="err-consent" hidden></p>
+      </fieldset>
+
+      <p class="note-plain" id="noticeText"></p>
+
+      <div class="actions">
+        <span class="actions-spacer"></span>
+        <button type="button" class="btn btn-primary" id="btnConsentNext">다음 단계</button>
+      </div>
+    </section>
+
+    <!-- 02 신청자 정보 -->
+    <section class="panel" data-panel="applicant" aria-labelledby="h-applicant">
+      <h2 id="h-applicant">신청자 정보</h2>
+      <p class="panel-desc">성명과 휴대전화번호로 이전 수강 이력을 확인합니다.</p>
+
+      <div class="field">
+        <label for="univSearch">소속학교 <span class="tag tag-required">필수</span></label>
+        <div class="search-box" id="univSearchBox">
+          <input type="text" id="univSearch" placeholder="학교명을 입력하세요" autocomplete="off"
+                 role="combobox" aria-expanded="false" aria-controls="univResults" aria-autocomplete="list">
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none">
+              <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </div>
+        <p class="field-help" id="univHelp">학교명 일부만 입력해도 찾을 수 있습니다. 예: 숭실, 한양 에리카</p>
+
+        <ul class="search-results" id="univResults" role="listbox" aria-label="학교 검색 결과"></ul>
+
+        <div class="picked" id="univPicked" hidden>
+          <div class="picked-body">
+            <span class="picked-label">선택한 학교</span>
+            <strong id="univPickedName"></strong>
+            <span class="picked-flag" id="univPickedFlag" hidden>직접 입력한 학교입니다. 관리자 확인 후 정식 등록됩니다.</span>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnUnivClear">변경</button>
+        </div>
+
+        <div class="no-result" id="univEmpty" hidden>
+          <p>검색 결과가 없습니다. 학교명 일부만 입력해 다시 찾아보세요.</p>
+          <button type="button" class="btn-link" id="btnUnivAddOpen">목록에 없는 학교 직접 입력</button>
+        </div>
+
+        <div class="add-form" id="univAddForm" hidden>
+          <p class="add-form-title">목록에 없는 학교 입력</p>
+          <p class="add-form-desc">직접 입력한 학교는 관리자 확인을 거쳐 정식 등록됩니다.</p>
+          <div class="field">
+            <label for="addUnivName">학교명 <span class="tag tag-required">필수</span></label>
+            <input type="text" id="addUnivName" placeholder="예: 한국대학교" maxlength="40" autocomplete="off">
+            <p class="field-error" id="err-addUnivName" hidden></p>
+          </div>
+          <div class="field">
+            <label for="addUnivCampus">캠퍼스 <span class="tag tag-optional">선택</span></label>
+            <input type="text" id="addUnivCampus" placeholder="예: 제2캠퍼스" maxlength="20" autocomplete="off">
+            <p class="field-help">캠퍼스가 나뉜 학교만 입력하세요.</p>
+          </div>
+          <div class="add-form-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="btnUnivAddCancel">취소</button>
+            <button type="button" class="btn btn-primary btn-sm" id="btnUnivAddSave">이 학교로 진행</button>
+          </div>
+        </div>
+
+        <p class="field-error" id="err-univ" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="inputName">성명 <span class="tag tag-required">필수</span></label>
+        <input type="text" id="inputName" class="input-md" maxlength="10" autocomplete="name">
+        <p class="field-help">이수증에 표기되므로 정확하게 입력해 주세요.</p>
+        <p class="field-error" id="err-name" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="inputPhone">휴대전화번호 <span class="tag tag-required">필수</span></label>
+        <input type="tel" id="inputPhone" class="input-md" placeholder="010-0000-0000" maxlength="13"
+               inputmode="numeric" autocomplete="tel">
+        <p class="field-help">교육 일정 변경과 이수 안내에 사용됩니다.</p>
+        <p class="field-error" id="err-phone" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="inputPhone2">휴대전화번호 확인 <span class="tag tag-required">필수</span></label>
+        <input type="tel" id="inputPhone2" class="input-md" placeholder="010-0000-0000" maxlength="13"
+               inputmode="numeric" autocomplete="off">
+        <p class="field-error" id="err-phone2" hidden></p>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" data-back="consent">이전</button>
+        <button type="button" class="btn btn-primary" id="btnApplicantNext">이력 확인</button>
+      </div>
+    </section>
+
+    <!-- 02-1 이력 확인 결과 (번호 일치 또는 뒤 네 자리 확인 후) -->
+    <section class="panel" data-panel="record" aria-labelledby="h-record">
+      <h2 id="h-record">이전 수강 이력이 확인되었습니다</h2>
+      <p class="panel-desc" id="recordDesc">아래 정보가 본인의 것이 맞는지 확인해 주세요.</p>
+
+      <div class="record" id="recordBox"></div>
+      <div class="callout" id="recordOrgNote" hidden></div>
+
+      <fieldset class="field">
+        <legend id="recordLegend">어떻게 진행할까요?</legend>
+        <div class="choices">
+          <label class="choice" id="choiceSame"><input type="radio" name="record" value="same">
+            <span class="choice-body"><strong id="labelSame"></strong><span class="choice-desc" id="descSame"></span></span></label>
+          <label class="choice" id="choiceChanged"><input type="radio" name="record" value="changed">
+            <span class="choice-body"><strong id="labelChanged"></strong><span class="choice-desc" id="descChanged"></span></span></label>
+          <label class="choice" id="choiceNotMe"><input type="radio" name="record" value="no">
+            <span class="choice-body"><strong>아니오, 제 정보가 아닙니다</strong>
+              <span class="choice-desc">성명과 휴대전화번호를 다시 확인합니다</span></span></label>
+        </div>
+        <p class="field-error" id="err-record" hidden></p>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" data-back="applicant">이전</button>
+        <button type="button" class="btn btn-primary" id="btnRecordNext">다음 단계</button>
+      </div>
+    </section>
+
+    <!-- 02-2 후보 선택 -->
+    <section class="panel" data-panel="candidates" aria-labelledby="h-candidates">
+      <h2 id="h-candidates">이전 이력을 이어받으시겠습니까?</h2>
+      <p class="panel-desc">
+        입력한 휴대전화번호로는 기록을 찾지 못했지만, 같은 학교에 같은 성명의 이력이 있습니다.
+        휴대전화번호가 바뀐 경우 이전 이력을 이어받을 수 있습니다.
+      </p>
+      <fieldset class="field">
+        <legend>본인의 이전 이력을 선택해 주세요</legend>
+        <div class="choices" id="candidateList"></div>
+        <p class="field-error" id="err-candidate" hidden></p>
+      </fieldset>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" data-back="applicant">이전</button>
+        <button type="button" class="btn btn-primary" id="btnCandidateNext">다음 단계</button>
+      </div>
+    </section>
+
+    <!-- 02-3 이전 번호 뒤 네 자리 -->
+    <section class="panel" data-panel="verify" aria-labelledby="h-verify">
+      <h2 id="h-verify">이전 정보 확인</h2>
+      <p class="panel-desc">선택한 이력이 본인의 것인지 확인합니다. 그때 등록했던 휴대전화번호의 뒤 네 자리를 입력해 주세요.</p>
+      <div class="field">
+        <label for="inputLast4">이전 휴대전화번호 뒤 네 자리 <span class="tag tag-required">필수</span></label>
+        <div class="last4">
+          <span class="last4-prefix" aria-hidden="true">010 - **** -</span>
+          <input type="text" id="inputLast4" maxlength="4" inputmode="numeric" placeholder="0000" autocomplete="off">
+        </div>
+        <p class="field-error" id="err-last4" hidden></p>
+      </div>
+      <div class="actions actions-stack">
+        <button type="button" class="btn btn-primary" id="btnVerify">확인</button>
+        <button type="button" class="btn btn-ghost" id="btnVerifySkip">기억나지 않습니다. 새로 신청하기</button>
+      </div>
+    </section>
+
+    <!-- 03 연수 정보 -->
+    <section class="panel" data-panel="course" aria-labelledby="h-course">
+      <h2 id="h-course">연수 정보</h2>
+      <p class="panel-desc">이메일, 직무와 경력, 신청할 연수 과정을 입력해 주세요.</p>
+
+      <fieldset class="field" id="emailChoiceBlock" hidden>
+        <legend>이메일 <span class="tag tag-required">필수</span></legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="emailMode" value="keep">
+            <span class="choice-body"><strong>등록된 이메일 사용</strong><span class="choice-desc" id="keepEmailDesc"></span></span></label>
+          <label class="choice"><input type="radio" name="emailMode" value="new">
+            <span class="choice-body"><strong>새 이메일 입력</strong><span class="choice-desc">이메일이 바뀐 경우 선택해 주세요</span></span></label>
+        </div>
+        <p class="field-error" id="err-emailMode" hidden></p>
+      </fieldset>
+
+      <div id="emailInputBlock">
+        <div class="field">
+          <label for="inputEmail">이메일 <span class="tag tag-required">필수</span></label>
+          <input type="email" id="inputEmail" class="input-lg" placeholder="name@university.ac.kr" autocomplete="email">
+          <p class="field-help">이수증과 교육 안내가 이 주소로 발송됩니다. 본인 이메일만 쓸 수 있습니다.</p>
+          <p class="field-error" id="err-email" hidden></p>
+        </div>
+        <div class="field">
+          <label for="inputEmail2">이메일 확인 <span class="tag tag-required">필수</span></label>
+          <input type="email" id="inputEmail2" class="input-lg" placeholder="name@university.ac.kr" autocomplete="off">
+          <p class="field-error" id="err-email2" hidden></p>
+        </div>
+      </div>
+
+      <fieldset class="field">
+        <legend>현재 수행 중인 입학 관련 직무 유형 <span class="tag tag-required">필수</span></legend>
+        <div class="choices" id="jobChoices"></div>
+        <p class="field-error" id="err-job" hidden></p>
+      </fieldset>
+
+      <fieldset class="field" id="managerBlock" hidden>
+        <legend>교육 담당자 여부 <span class="tag tag-required">필수</span></legend>
+        <p class="field-help field-help-top">연수 관련 공지 메일을 받는 대학 대표 담당자를 말합니다.</p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="manager" value="yes">
+            <span class="choice-body"><strong>예</strong><span class="choice-desc">우리 대학 교육 담당자입니다</span></span></label>
+          <label class="choice"><input type="radio" name="manager" value="no" checked>
+            <span class="choice-body"><strong>아니오</strong><span class="choice-desc">일반 수강자로 신청합니다</span></span></label>
+        </div>
+        <div class="callout" id="managerNotice" hidden></div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>입학사정관 경력 <span class="tag tag-required">필수</span></legend>
+        <div class="choices choices-row" id="careerChoices"></div>
+        <p class="field-error" id="err-career" hidden></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>신청 과정 <span class="tag tag-required">필수</span></legend>
+        <div class="choices" id="courseChoices"></div>
+        <p class="field-error" id="err-course" hidden></p>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="btnCourseBack">이전</button>
+        <button type="button" class="btn btn-primary" id="btnCourseNext">입력 내용 확인</button>
+      </div>
+    </section>
+
+    <!-- 04 최종 확인 -->
+    <section class="panel" data-panel="confirm" aria-labelledby="h-confirm">
+      <h2 id="h-confirm">입력하신 내용을 확인해 주세요</h2>
+      <p class="panel-desc">성명과 이메일은 이수증 발급에 사용됩니다. 정확한지 확인해 주세요.</p>
+      <dl class="summary" id="summaryList"></dl>
+      <p class="note-plain" id="confirmNote"></p>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" data-back="course">이전</button>
+        <button type="button" class="btn btn-primary" id="btnSubmit">이대로 신청하기</button>
+      </div>
+    </section>
+
+    <!-- 완료 -->
+    <section class="panel" data-panel="done" aria-labelledby="h-done">
+      <div class="complete">
+        <p class="complete-head">
+          <span class="complete-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none">
+              <path d="M4 12.5l5.2 5.2L20 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span id="h-done">연수 신청이 완료되었습니다</span>
+        </p>
+        <dl class="complete-list" id="completeList"></dl>
+      </div>
+      <div class="callout" id="managerResult" hidden></div>
+      <p class="note-plain" id="doneNote"></p>
+    </section>
+
+  </main>
+
+  <footer class="service-footer">
+    <p class="footer-org">숭실대학교 입학처</p>
+    <p class="footer-contact">교육 문의 <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<noscript><p class="noscript">이 페이지는 자바스크립트가 필요합니다. 브라우저 설정을 확인해 주세요.</p></noscript>
+</body>
+</html>
