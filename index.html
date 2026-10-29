@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>입학사정관 연수 신청 | 숭실대학교</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="styles.css">
   <script src="config.js" defer></script>
   <script src="site.js" defer></script>
@@ -30,16 +28,16 @@
 
 <!-- 아래 내용은 관리자 페이지(admin.html)의 설정으로 바뀝니다. 여기 적힌 값은 설정을 불러오기 전 기본값입니다. -->
 
-<div class="utility-bar" id="utilityBar">
-  <div class="page-container utility-inner">
-    <ul class="utility-links" id="utilityLinks">
-      <li><a href="https://ssu.ac.kr" target="_blank" rel="noopener">숭실대학교 홈페이지<span class="sr-only"> (새 창)</span></a></li>
-    </ul>
-    <p class="utility-hours" id="utilityHours">운영 시간 평일 09:00 – 18:00</p>
-  </div>
-</div>
-
 <header class="service-header">
+  <div class="utility-bar" id="utilityBar">
+    <div class="page-container utility-inner">
+      <ul class="utility-links" id="utilityLinks">
+        <li><a href="https://ssu.ac.kr" target="_blank" rel="noopener">숭실대학교 홈페이지<span class="sr-only"> (새 창)</span></a></li>
+      </ul>
+      <p class="utility-hours" id="utilityHours">운영 시간 평일 09:00 – 18:00</p>
+    </div>
+  </div>
+
   <div class="page-container header-inner">
     <a class="brand" id="brandLink" href="./">
       <img class="brand-logo" id="brandLogo" alt="" hidden>
@@ -52,7 +50,7 @@
       </span>
       <span class="brand-text">
         <strong id="brandOrg">숭실대학교</strong>
-        <span class="brand-service" id="brandService">입학사정관 연수</span>
+        <span class="brand-service"><span id="brandService">입학사정관 연수</span> <b class="brand-tag" id="brandTag" hidden></b></span>
       </span>
     </a>
 
@@ -411,15 +409,37 @@
 
   </main>
 
-  <footer class="service-footer">
-    <div class="footer-main">
-      <p class="footer-org" id="footerOrg">숭실대학교 입학처</p>
-      <p class="footer-address" id="footerAddress" hidden></p>
-      <p class="footer-copy" id="footerCopy" hidden></p>
-    </div>
-    <p class="footer-contact"><span class="js-contact-label">교육 문의</span> <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
-  </footer>
 </div>
+
+<footer class="site-footer">
+  <div class="page-container footer-inner">
+    <div class="footer-main">
+      <p class="footer-brand">
+        <img class="footer-logo" id="footerLogo" alt="" hidden>
+        <strong class="footer-org" id="footerOrg">숭실대학교 입학처</strong>
+        <span class="footer-service" id="footerService">입학사정관 연수</span>
+      </p>
+      <p class="footer-address" id="footerAddress">06978 서울특별시 동작구 상도로 369 숭실대학교</p>
+      <p class="footer-contact"><span class="js-contact-label">교육 문의</span> <a class="js-tel" href="tel:0282000054">02-820-0054</a></p>
+      <p class="footer-copy" id="footerCopy">Copyright Soongsil University All Rights Reserved.</p>
+    </div>
+    <div class="footer-side">
+      <a class="footer-privacy" id="footerPrivacy" href="https://ssu.ac.kr/main/%ea%b0%9c%ec%9d%b8%ec%a0%95%eb%b3%b4%ec%b2%98%eb%a6%ac%eb%b0%a9%ec%b9%a8/" target="_blank" rel="noopener">
+        <span id="footerPrivacyLabel">개인정보처리방침</span>
+        <span class="footer-privacy-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M5 11l6-6M6 5h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="sr-only"> (새 창)</span>
+      </a>
+      <details class="family" id="familyBox">
+        <summary>패밀리사이트 <span class="family-plus" aria-hidden="true"></span></summary>
+        <ul id="familyList">
+          <li><a href="https://ssu.ac.kr" target="_blank" rel="noopener">숭실대학교<span class="sr-only"> (새 창)</span></a></li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

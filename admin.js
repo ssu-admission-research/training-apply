@@ -195,7 +195,55 @@
     $$('[data-links]').forEach(renderLinks);
     renderLogo();
     renderColor();
+    renderFonts();
     paintSaveBar();
+  }
+
+  /* ---------- 글씨체 ---------- */
+
+  let fontsBuilt = false;
+
+  function renderFonts() {
+    const box = $('#fontOptions');
+    if (!fontsBuilt) {
+      fontsBuilt = true;
+      Object.keys(SITE.FONTS).forEach((key) => {
+        const f = SITE.FONTS[key];
+        // 견본을 보여 주려고 관리자 화면에도 웹 글꼴을 불러옵니다
+        if (f.href && !document.querySelector('link[data-font="' + key + '"]')) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = f.href;
+          link.dataset.font = key;
+          document.head.appendChild(link);
+        }
+        const label = document.createElement('label');
+        label.className = 'font-option';
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'font';
+        input.value = key;
+        input.addEventListener('change', () => {
+          if (!input.checked || !draft) return;
+          draft.theme.font = key;
+          changed();
+        });
+        const name = document.createElement('span');
+        name.className = 'fo-name';
+        name.textContent = f.label + (f.href ? '' : ' · 내려받기 없음');
+        const sample = document.createElement('span');
+        sample.className = 'fo-sample';
+        sample.style.fontFamily = f.css;
+        sample.textContent = '2026년 연수 신청';
+        const body = document.createElement('span');
+        body.className = 'fo-body';
+        body.style.fontFamily = f.css;
+        body.textContent = '신청자 정보를 입력해 주세요. 0123456789';
+        label.append(input, name, sample, body);
+        box.appendChild(label);
+      });
+    }
+    $$('input[name="font"]', box).forEach((r) => { r.checked = r.value === draft.theme.font; });
   }
 
   // 일반 입력란

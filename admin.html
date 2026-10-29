@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>사이트 관리 | 입학사정관 연수 신청</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="admin.css">
   <script src="config.js" defer></script>
   <script src="site.js" defer></script>
@@ -59,7 +57,7 @@
       <a href="#sec-notice">공지 띠</a>
       <p class="sidenav-title">본문</p>
       <a href="#sec-hero">제목 영역</a>
-      <a href="#sec-theme">대표 색상</a>
+      <a href="#sec-theme">색상 · 글씨체</a>
       <p class="sidenav-title">하단</p>
       <a href="#sec-footer">하단 정보</a>
     </nav>
@@ -124,6 +122,12 @@
             <div class="row-label"><label for="f-serviceName">서비스 이름</label></div>
             <div class="row-control"><input type="text" id="f-serviceName" data-path="brand.serviceName" maxlength="30"></div>
             <p class="row-help">학교 이름 오른쪽에 구분선과 함께 표시됩니다. 30자 이내.</p>
+          </div>
+
+          <div class="row">
+            <div class="row-label"><label for="f-serviceTag">영문 표시</label></div>
+            <div class="row-control"><input type="text" id="f-serviceTag" data-path="brand.serviceTag" maxlength="12" class="w-md" placeholder="예: ADMIT"></div>
+            <p class="row-help">서비스 이름 뒤에 대표 색상으로 굵게 붙습니다. 교육 사이트처럼 'ADMIT'을 넣을 수 있어요. 비우면 숨깁니다.</p>
           </div>
         </section>
 
@@ -248,7 +252,7 @@
 
         <!-- 대표 색상 -->
         <section class="sec" id="sec-theme" aria-labelledby="h-theme">
-          <h2 id="h-theme">대표 색상</h2>
+          <h2 id="h-theme">색상 · 글씨체</h2>
           <div class="row">
             <div class="row-label">색상</div>
             <div class="row-control">
@@ -260,6 +264,13 @@
               <p class="row-warn" id="colorWarn" hidden></p>
             </div>
             <p class="row-help">버튼, 선택 표시, 링크 색입니다. 흰 글자가 잘 읽히도록 너무 밝은 색은 피하세요.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">글씨체</div>
+            <div class="row-control">
+              <div class="font-options" id="fontOptions" role="radiogroup" aria-label="글씨체"></div>
+            </div>
+            <p class="row-help">맑은 고딕은 윈도우에 기본으로 깔린 글씨체라 따로 내려받지 않아 가장 빠릅니다. 맥·아이폰에서는 비슷한 기본 고딕으로 보입니다. 모든 기기에서 똑같이 보여야 하면 나눔고딕이나 본고딕을 고르세요.</p>
           </div>
         </section>
 
@@ -280,6 +291,21 @@
             <div class="row-label"><label for="f-copy">저작권 문구</label></div>
             <div class="row-control"><input type="text" id="f-copy" data-path="footer.copyright" maxlength="80" placeholder="예: © Soongsil University. All rights reserved."></div>
             <p class="row-help">비우면 숨깁니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">개인정보처리방침</div>
+            <div class="row-control two">
+              <input type="text" data-path="footer.privacyLabel" maxlength="20" aria-label="개인정보처리방침 링크 이름">
+              <input type="url" data-path="footer.privacyUrl" maxlength="300" placeholder="https://" aria-label="개인정보처리방침 주소">
+            </div>
+            <p class="row-help">하단 오른쪽에 굵게 표시되고 새 창으로 열립니다. 기본값은 숭실대학교 개인정보처리방침 페이지입니다. 주소를 비우면 숨깁니다.</p>
+          </div>
+          <div class="row">
+            <div class="row-label">패밀리사이트</div>
+            <div class="row-control">
+              <div class="links" data-links="footer.familyLinks" data-max="8"></div>
+            </div>
+            <p class="row-help">하단 '패밀리사이트 +'를 누르면 펼쳐지는 목록입니다. 최대 8개. 교육 사이트 주소를 넣어 두면 오가기 편합니다.</p>
           </div>
         </section>
 

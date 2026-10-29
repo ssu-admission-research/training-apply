@@ -8,6 +8,32 @@
 (function () {
   'use strict';
 
+  const PRIVACY_URL = 'https://ssu.ac.kr/main/%ea%b0%9c%ec%9d%b8%ec%a0%95%eb%b3%b4%ec%b2%98%eb%a6%ac%eb%b0%a9%ec%b9%a8/';
+
+  /** 글씨체 — css: 글꼴 이름 목록, href: 웹 글꼴 주소(없으면 컴퓨터에 깔린 글꼴), tight: 자간을 좁혀도 되는지 */
+  const FONTS = {
+    malgun: {
+      label: '맑은 고딕',
+      css: '"Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif'
+    },
+    nanum: {
+      label: '나눔고딕',
+      css: '"Nanum Gothic", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif',
+      href: 'https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap'
+    },
+    noto: {
+      label: '본고딕 (Noto Sans KR)',
+      css: '"Noto Sans KR", "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif',
+      href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap'
+    },
+    pretendard: {
+      label: '프리텐다드',
+      css: '"Pretendard Variable", "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif',
+      href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css',
+      tight: true
+    }
+  };
+
   function defaults() {
     return {
       brand: {
@@ -16,7 +42,8 @@
         logoHeight: 40,
         showOrgName: true,
         orgName: '숭실대학교',
-        serviceName: '입학사정관 연수'
+        serviceName: '입학사정관 연수',
+        serviceTag: ''
       },
       utility: {
         show: true,
@@ -32,8 +59,15 @@
         title: '{year}년 연수 신청',
         desc: '신청자 정보와 수강할 연수 과정을 입력해 주세요.'
       },
-      theme: { primary: '#006694' },
-      footer: { org: '숭실대학교 입학처', address: '', copyright: '' }
+      theme: { primary: '#006694', font: 'malgun' },
+      footer: {
+        org: '숭실대학교 입학처',
+        address: '06978 서울특별시 동작구 상도로 369 숭실대학교',
+        copyright: 'Copyright Soongsil University All Rights Reserved.',
+        privacyLabel: '개인정보처리방침',
+        privacyUrl: PRIVACY_URL,
+        familyLinks: [{ label: '숭실대학교', url: 'https://ssu.ac.kr', newTab: true }]
+      }
     };
   }
 
@@ -82,7 +116,8 @@
         logoHeight: height >= 24 && height <= 64 ? Math.round(height) : d.brand.logoHeight,
         showOrgName: logo ? b.showOrgName !== false : true,
         orgName: text(b.orgName, 30, d.brand.orgName) || d.brand.orgName,
-        serviceName: text(b.serviceName, 30, d.brand.serviceName)
+        serviceName: text(b.serviceName, 30, d.brand.serviceName),
+        serviceTag: text(b.serviceTag, 12, '')
       },
       utility: {
         show: u.show !== undefined ? !!u.show : d.utility.show,
@@ -108,12 +143,17 @@
         desc: text(h.desc, 160, d.hero.desc)
       },
       theme: {
-        primary: /^#[0-9a-fA-F]{6}$/.test(String(t.primary || '')) ? String(t.primary).toUpperCase() : d.theme.primary
+        primary: /^#[0-9a-fA-F]{6}$/.test(String(t.primary || '')) ? String(t.primary).toUpperCase() : d.theme.primary,
+        font: Object.prototype.hasOwnProperty.call(FONTS, t.font) ? t.font : d.theme.font
       },
       footer: {
         org: text(f.org, 40, d.footer.org) || d.footer.org,
-        address: text(f.address, 80, ''),
-        copyright: text(f.copyright, 80, '')
+        // 이전 버전에서 저장한 설정(개인정보처리방침 항목이 없음)은 빈 주소·저작권을 새 기본값으로 채웁니다
+        address: f.privacyUrl === undefined && !f.address ? d.footer.address : text(f.address, 80, d.footer.address),
+        copyright: f.privacyUrl === undefined && !f.copyright ? d.footer.copyright : text(f.copyright, 80, d.footer.copyright),
+        privacyLabel: text(f.privacyLabel, 20, d.footer.privacyLabel) || d.footer.privacyLabel,
+        privacyUrl: f.privacyUrl === undefined ? d.footer.privacyUrl : url(f.privacyUrl),
+        familyLinks: Array.isArray(f.familyLinks) ? links(f.familyLinks, 8) : d.footer.familyLinks
       }
     };
   }
@@ -192,10 +232,11 @@
     const c = ctx || {};
     if (!$('#brandOrg')) return site;
 
-    // 색상
+    // 색상 · 글씨체
     const root = document.documentElement.style;
     root.setProperty('--ssu-primary', site.theme.primary);
     root.setProperty('--ssu-primary-dark', shade(site.theme.primary, 0.18));
+    applyFont(site.theme.font);
 
     // 로고 · 이름
     const b = site.brand;
@@ -214,8 +255,11 @@
     const org = $('#brandOrg');
     org.textContent = b.orgName;
     org.hidden = !b.showOrgName;
-    const svc = setText('#brandService', b.serviceName);
-    if (svc) svc.classList.toggle('no-divider', !b.showOrgName);
+    setText('#brandService', b.serviceName);
+    setText('#brandTag', b.serviceTag);
+    const svcBox = $('.brand-service');
+    svcBox.hidden = !(b.serviceName || b.serviceTag);
+    svcBox.classList.toggle('no-divider', !b.showOrgName);
     $('#brandLink').setAttribute('aria-label', b.orgName + ' ' + (b.serviceName || '') + ' 처음으로');
 
     // 맨 위 띠
@@ -264,12 +308,36 @@
 
     // 하단
     const f = site.footer;
+    const flogo = $('#footerLogo');
+    if (b.logo) { flogo.src = b.logo; flogo.alt = b.logoAlt; flogo.hidden = false; }
+    else { flogo.removeAttribute('src'); flogo.hidden = true; }
     $('#footerOrg').textContent = f.org;
+    setText('#footerService', [b.serviceName, b.serviceTag].filter(Boolean).join(' '));
     setText('#footerAddress', f.address);
     setText('#footerCopy', f.copyright);
+    const pv = $('#footerPrivacy');
+    pv.hidden = !f.privacyUrl;
+    if (f.privacyUrl) pv.href = f.privacyUrl;
+    $('#footerPrivacyLabel').textContent = f.privacyLabel;
+    fill($('#familyList'), f.familyLinks);
+    $('#familyBox').hidden = !f.familyLinks.length;
 
     return site;
   }
 
-  window.SITE = { defaults, clean, apply, logoOk, contrastWithWhite, shade, MAX_LOGO_CHARS };
+  /** 글씨체를 바꿉니다. 웹 글꼴은 처음 고를 때 한 번만 내려받습니다. */
+  function applyFont(key) {
+    const f = FONTS[key] || FONTS.malgun;
+    if (f.href && !document.querySelector('link[data-font="' + key + '"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = f.href;
+      link.dataset.font = key;
+      document.head.appendChild(link);
+    }
+    document.documentElement.style.setProperty('--font-sans', f.css);
+    document.documentElement.classList.toggle('font-tight', !!f.tight);
+  }
+
+  window.SITE = { defaults, clean, apply, applyFont, FONTS, logoOk, contrastWithWhite, shade, MAX_LOGO_CHARS };
 })();
